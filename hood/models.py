@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 
 class Neighbourhood(models.Model):
     neighbourhood= models.CharField(max_length=100)
+    image = models.ImageField(upload_to='media/')
 
     def __str__(self):
         return self.neighbourhood
@@ -17,8 +18,6 @@ class Neighbourhood(models.Model):
     @classmethod
     def delete_neighbourhood(cls,neighbourhood):
         cls.objects.filter(neighbourhood=neighbourhood).delete()
-
-        
 
 
 class Profile(models.Model):
@@ -37,7 +36,6 @@ class Profile(models.Model):
 
 class Bussiness(models.Model):
     title = models.CharField(max_length=30)
-    image = models.ImageField(upload_to='media/')
     bussiness_description = models.TextField()
     user = models.ForeignKey(User,on_delete=models.CASCADE, blank=True)
     pub_date = models.DateTimeField(auto_now_add=True)
