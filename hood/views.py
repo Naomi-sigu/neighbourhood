@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.contrib import messages
-from .models import Profile
+from .models import Profile , Neighbourhood
 
 # Create your views here.
 @login_required(login_url='/accounts/login/')
 def welcome(request):
     current_user = request.user
-    return render (request, 'home.html')
+    hoods = Neighbourhood.get_all_hoods()
+    return render (request, 'home.html', {"hoods":hoods})
 
 @login_required
 def profile(request):
@@ -19,23 +20,29 @@ def profile(request):
 
 @login_required(login_url='/accounts/login/')
 def update_profile(request):
-  if request.method == 'POST':
-    u_form = UpdateUser(request.POST,instance=request.user)
-    p_form = UpdateProfile(request.POST,request.FILES,instance=request.user.profile)
-    if u_form.is_valid() and p_form.is_valid():
-      u_form.save()
-      p_form.save()
-      messages.success(request,'Your Profile account has been updated successfully')
-      return redirect('profile')
-  else:
-    u_form = UpdateUser(instance=request.user)
-    p_form = UpdateProfile(instance=request.user.profile) 
-    
-  params = {
-    'u_form':u_form,
-    'p_form':p_form
-  }
-  return render(request,'update_profile.html', params)
-  
+    current_user=request.user
+    if request.method=="POST":
+        instance = Profile.objects.get(user=current_user)
+        form =UpdateProfile(request.POST,request.FILES,instance=instance)
+        if form.is_valid():
+            profile = form.save(commit = False)
+            profile.user = current_user
+            profile.save()
+
+        return redirect('/')
+
+    elif Profile.objects.get(user=current_user):
+        profile = Profile.objects.get(user=current_user)
+        form = UpdateProfile(instance=profile)
+    else:
+        form = UpdateProfile()
+
+    return render(request,'update_profile.html',{"form":form}) 
  
- 
+@login_required(login_url='/accounts/login/')
+def businesses(request):
+    current_user=request.user
+    profile=Profile.objects.get(user=current_user)
+    businesses = Business.objects.filter(neighbourhood=profile.neighbourhood)
+
+    return render(request,'businesses.html',{"businesses":businesses}) 
