@@ -27,12 +27,9 @@ class Neighbourhood(models.Model):
 
 class Profile(models.Model):
   profile_pic = models.ImageField(default='../static/images/default.jpeg',upload_to='media/')
+  neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE,null=True)
   bio = models.TextField()
-  neighbourhood = models.ForeignKey(Neighbourhood,default='...')
-  user = models.ForeignKey(User,on_delete=models.CASCADE)
-
-  def __str__(self):
-    return self.name
+  user = models.OneToOneField(User,on_delete = models.CASCADE)
   
   @receiver(post_save , sender = User)
   def create_profile(instance,sender,created,**kwargs):
@@ -43,10 +40,14 @@ class Profile(models.Model):
   def save_profile(sender,instance,**kwargs):
     instance.profile.save()
 
+  def __str__(self):
+    return self.user
+
+
 class Business(models.Model):
     name =models.CharField(max_length=100)
     description = models.TextField()
-    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+    neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE,null=True)
     owner = models.ForeignKey(User,on_delete=models.CASCADE)
     email = models.EmailField()
     address =models.CharField(max_length=100)
