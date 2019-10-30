@@ -66,4 +66,4 @@ class Bussiness(models.Model):
         bussiness= Bussiness.objects.all()
         return bussiness
 
-        
+businesses = Business.objects.filter(Neighbourhood=profile.Neighbourhood)
