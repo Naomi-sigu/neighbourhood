@@ -70,3 +70,46 @@ def new_business(request):
         form = BusinessForm()
 
     return render(request,'newbusiness.html',{"form":form})
+
+@login_required(login_url='/accounts/login/')
+def search_businesses(request):
+    if 'keyword' in request.GET and request.GET["keyword"]:
+        search_term = request.GET.get("keyword")
+        searched_projects = Business.search_business(search_term)
+        message = f"{search_term}"
+
+        return render(request, 'search.html', {"message":message,"businesses": searched_projects})
+
+    else:
+        message = "You haven't searched for any term"
+        return render(request, 'search.html', {"message": message})   
+
+@login_required(login_url='/accounts/login')
+def post(request):
+    current_user = request.user
+    post = Post.get_all_posts()
+    return render(request, 'post.html', {"post": post})      
+
+@login_required(login_url='/accounts/login')
+def new_post(request):
+    
+    profile = Profile.objects.get(user = request.user)
+    
+    if request.method == 'POST':
+        
+        form = PostForm(request.POST)
+        
+        if form.is_valid():
+            
+            post = form.save(commit = False)
+            post.user = request.user
+            post.neighbourhood = profile.neighbourhood
+            post.save()
+            
+        return redirect('/')
+    
+    else:
+        
+        form = PostForm()
+        
+    return render(request, 'new_post.html', {"profile": profile, "form": form})    

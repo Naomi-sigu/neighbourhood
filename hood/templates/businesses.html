@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-
-
 {% block content %}
     <div class="container">
 
-
         {% if businesses %}
-        
+
         <div class="card card-body my-5">
             <table class="table">
                 <thead class="black white-text">
@@ -16,20 +13,18 @@
                         <th class="th-sm">Business Name</th>
                         <th class="th-sm">Business Description</th>
                         <th class="th-sm">Business Owner</th>
-                        <th class="th-sm">Business Email</th>
-                        <th class="th-sm">Neighborhood</th>
+                        <th class="th-sm">Email</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for business in businesses %}
                     <tr>
-                        <th scope="row">{{business.id}}</th>
+                        <th scope="row"></th>
                         <td>{{business.name}}</td>
                         <td>{{business.description}}</td>
-                        <td>{{business.user}}</td>
+                        <td>{{business.owner}}</td>
                         <td>{{business.email}}</td>
-                        <td>{{business.neighbourhood}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
