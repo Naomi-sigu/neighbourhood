@@ -30,6 +30,7 @@ class Profile(models.Model):
   neighbourhood = models.ForeignKey(Neighbourhood,on_delete=models.CASCADE,null=True)
   bio = models.TextField()
   user = models.OneToOneField(User,on_delete = models.CASCADE)
+  neighbourhood = models.CharField(max_length=30, null=True)
   
   @receiver(post_save , sender = User)
   def create_profile(instance,sender,created,**kwargs):
