@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'hood',
     'bootstrap4',
     'crispy_forms',
+    'registration',
 ]
 
 MIDDLEWARE = [
