@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import django_heroku
+
 import dj_database_url
 from decouple import config,Csv
 
@@ -28,7 +28,7 @@ SECRET_KEY='6m2+4#@t1vh&ao2k^ffy*e1(e#k%2y9zfd=m6jq(tr@cxk*gcy'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.localhost', '.herokuapp.com', '.127.0.0.1'
+ALLOWED_HOSTS = ['.localhost', '.onrender.com', '.127.0.0.1'
 ]
 
 
@@ -82,13 +82,19 @@ WSGI_APPLICATION = 'neighbour.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'hood',
+#         'USER': 'naomi',
+#     'PASSWORD':'7269',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hood',
-        'USER': 'naomi',
-    'PASSWORD':'7269',
-    }
+    "default": dj_database_url.config(
+        default=config("DATABASE_URL")
+    )
 }
 
 # Password validation
@@ -139,4 +145,3 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-django_heroku.settings(locals())
